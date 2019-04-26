@@ -1,0 +1,6 @@
+FROM nginx:latest
+
+COPY dhpram.pem /etc/nginx/conf.d
+COPY priv_cert.pem /etc/nginx/conf.d
+COPY pub_cert.pem /etc/nginx/conf.d
+COPY default.conf /etc/nginx/conf.d

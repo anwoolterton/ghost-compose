@@ -1,0 +1,43 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:5.7
+    restart: on-failure
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: db
+        MYSQL_USER: blog-user
+        MYSQL_PASSWORD: supersecret
+    volumes:
+      - ./mysql:var/lib/mysql
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 20s
+        retries: 10
+  ghost:
+    image: ghost:latest
+    restart: on-failure
+    depends_on:
+        - mysql
+    environment:
+        url: https://ghost.local
+        database__client: mysql
+        database__connection__host: mysql
+        database__connection__user: root
+        database__connection__user: blog-user
+        database__connection__password: supersecret
+        database__connection__database: db
+    volumes:
+      - ./ghost:/var/lib/ghost/content
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    restart: on-failure
+    depends_on:
+      - ghost
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+       - ./nginx:/usr/share/nginx/html
