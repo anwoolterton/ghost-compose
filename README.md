@@ -11,8 +11,8 @@ Nginx is running in the following configuration
 
 # Requirements
 
-docker
-docker-compose
+* docker
+* docker-compose
 
 # Setup
 You will either need a local dnsmasq or local host override to goto ghost.local
